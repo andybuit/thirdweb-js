@@ -25,6 +25,9 @@
     "portal:build": "turbo run build --filter=./apps/portal",
     "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb",
     "dashboard:build": "turbo run build --filter=./apps/dashboard",
+    "game:ios": "turbo run ios --filter=./apps/game-expo --filter=./packages/thirdweb",
+    "game:android": "turbo run android --filter=./apps/game-expo --filter=./packages/thirdweb",
+    "game:web": "turbo run web --filter=./apps/game-expo --filter=./packages/thirdweb",
     "build:packages": "turbo run build --filter=./packages/*",
     "build:legacy_packages": "turbo run build --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge",
     "build": "turbo run build --filter=./packages/* --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge --concurrency=1",
@@ -43,7 +46,8 @@
     "release:nightly": "node ./scripts/pre-release.mjs && turbo run update-version && pnpm build && changeset publish --tag nightly",
     "push": "turbo run push --filter=./packages/* --filter=./legacy_packages/**",
     "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
-    "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs"
+    "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs",
+    "clean": "turbo run clean"
   },
   "devDependencies": {
     "@babel/plugin-transform-flow-strip-types": "^7.25.2",

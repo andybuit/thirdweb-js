@@ -154,6 +154,18 @@
       "cache": false,
       "persistent": true
     },
+    "game-expo#ios": {
+      "cache": false,
+      "persistent": true
+    },
+    "game-expo#android": {
+      "cache": false,
+      "persistent": true
+    },
+    "game-expo#web": {
+      "cache": false,
+      "persistent": true
+    },
     "thirdweb-dashboard#dev": {
       "dependsOn": ["^build"]
     },
