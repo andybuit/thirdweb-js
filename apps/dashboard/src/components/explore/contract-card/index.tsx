@@ -1,23 +1,17 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { thirdwebClient } from "@/constants/client";
 import { cn } from "@/lib/utils";
-import {
-  type QueryClient,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
-import { ensQuery } from "components/contract-components/hooks";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
-import { polygon } from "thirdweb/chains";
 import { resolveScheme } from "thirdweb/storage";
-import invariant from "tiny-invariant";
+import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
@@ -256,62 +250,12 @@ type PublishedContractId =
   | `${string}/${string}`
   | `${string}/${string}/${string}`;
 
-async function publishedContractQueryFn(
-  publisher: string,
-  contractId: string,
-  version: string,
-  queryClient: QueryClient,
-) {
-  const polygonSdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-
-  const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
-  // START prefill both publisher ens variations
-  if (publisherEns.address) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.address).queryKey,
-      publisherEns,
-    );
-  }
-  if (publisherEns.ensName) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.ensName).queryKey,
-      publisherEns,
-    );
-  }
-  // END prefill both publisher ens variations
-  invariant(publisherEns.address, "publisher address not found");
-  const latestPublishedVersion = await polygonSdk
-    .getPublisher()
-    .getVersion(publisherEns.address, contractId, version);
-  invariant(latestPublishedVersion, "no published version found");
-  const contractInfo = await polygonSdk
-    .getPublisher()
-    .fetchPublishedContractInfo(latestPublishedVersion);
-  return {
-    ...latestPublishedVersion,
-    ...contractInfo.publishedMetadata,
-
-    publishedContractId: `${publisher}/${contractId}/${version}`,
-  };
-}
-
-export function publishedContractQuery(
-  publishedContractId: PublishedContractId,
-  queryClient: QueryClient,
-) {
-  const [publisher, contractId, version] = publishedContractId.split("/");
-  return {
-    queryKey: ["published-contract", { publisher, contractId, version }],
-    queryFn: () =>
-      publishedContractQueryFn(publisher, contractId, version, queryClient),
-    enabled: !!publisher || !!contractId,
-  };
-}
-
 function usePublishedContract(publishedContractId: PublishedContractId) {
-  const queryClient = useQueryClient();
-  return useQuery(publishedContractQuery(publishedContractId, queryClient));
+  const [publisher, contractId, version] = publishedContractId.split("/");
+  return useQuery({
+    queryKey: ["published-contract", { publishedContractId }],
+    queryFn: () =>
+      fetchPublishedContractVersion(publisher, contractId, version),
+    enabled: !!publisher || !!contractId,
+  });
 }

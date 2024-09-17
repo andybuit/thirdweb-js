@@ -13,12 +13,11 @@ type DirectDeployPageProps = {
 };
 
 export default async function DirectDeployPage(props: DirectDeployPageProps) {
+  const parsedUri = decodeURIComponent(props.params.compiler_uri);
   const metadata = await fetchDeployMetadata({
     client: thirdwebClient,
     // force `ipfs://` prefix
-    uri: props.params.compiler_uri.startsWith("ipfs://")
-      ? props.params.compiler_uri
-      : `ipfs://${props.params.compiler_uri}`,
+    uri: parsedUri.startsWith("ipfs://") ? parsedUri : `ipfs://${parsedUri}`,
   });
   return (
     <div className="container py-8 flex flex-col gap-4">
@@ -28,7 +27,11 @@ export default async function DirectDeployPage(props: DirectDeployPageProps) {
         description={metadata.description}
         logo={metadata.logo}
       />
-      <DeployFormForUri contractMetadata={metadata} modules={null} />
+      <DeployFormForUri
+        contractMetadata={metadata}
+        modules={null}
+        pathname={`/contracts/deploy/${props.params.compiler_uri}`}
+      />
     </div>
   );
 }

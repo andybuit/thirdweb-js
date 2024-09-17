@@ -107,17 +107,11 @@ export enum PageId {
   // thirdweb.com/dashboard/contracts
   Contracts = "contracts",
 
-  // thirdweb.com/explore
-  Explore = "explore",
-
   // thirdweb.com/events
   Events = "events",
 
   // thirdweb..com/mission
   Mission = "mission",
-
-  // thirdweb.com/explore/[category]
-  ExploreCategory = "explore-category",
 
   // thirdweb.com/gas
   GasEstimator = "gas-estimator",
@@ -166,9 +160,6 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   // thirdweb.com/contracts/publish
   PublishMultiple = "publish-multiple-contracts",
-
-  // thirdweb.com/contracts/publish/:id
-  PublishSingle = "publish-single-contract",
 
   // thirdweb.com/:wallet
   // example: thirdweb.com/jns.eth

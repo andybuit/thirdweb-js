@@ -75,7 +75,7 @@ async function fetchAndParseCompilerMetadata(
 
 // types
 
-type RawCompilerMetadata = {
+export type RawCompilerMetadata = {
   name: string;
   metadataUri: string;
   bytecodeUri: string;
@@ -130,9 +130,10 @@ type ParsedCompilerMetadata = {
 };
 
 export type CompilerMetadata = Prettify<
-  ParsedCompilerMetadata & {
-    bytecode: Hex;
-  }
+  RawCompilerMetadata &
+    ParsedCompilerMetadata & {
+      bytecode: Hex;
+    }
 >;
 
 export type ExtendedMetadata = {
@@ -195,5 +196,18 @@ export type ExtendedMetadata = {
     }
   >;
   compositeAbi?: Abi;
+  compilers?: Record<
+    "solc" | "zksolc",
+    {
+      evmVersion: string;
+      compilerVersion: string;
+      metadataUri: string;
+      bytecodeUri: string;
+    }[]
+  >;
+  externalLinks?: Array<{
+    name: string;
+    url: string;
+  }>;
   [key: string]: unknown;
 };

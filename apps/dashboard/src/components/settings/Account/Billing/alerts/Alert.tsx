@@ -48,7 +48,7 @@ export const BillingAlerts = () => {
         AccountStatus.InvalidPayment,
         AccountStatus.InvalidPaymentMethod,
         AccountStatus.PaymentVerification,
-      ].includes(account?.status as AccountStatus)
+      ].includes(account.state.data?.status as AccountStatus)
         ? 1000
         : false,
   });
@@ -336,17 +336,15 @@ const BillingAlertNotification: React.FC<BillingAlertNotificationProps> = ({
       variant="left-accent"
       bg="backgroundCardHighlight"
     >
-      <>
-        <OnboardingModal
-          isOpen={isPaymentMethodOpen}
-          onClose={onPaymentMethodClose}
-        >
-          <LazyOnboardingBilling
-            onSave={handlePaymentAdded}
-            onCancel={onPaymentMethodClose}
-          />
-        </OnboardingModal>
-      </>
+      <OnboardingModal
+        isOpen={isPaymentMethodOpen}
+        onClose={onPaymentMethodClose}
+      >
+        <LazyOnboardingBilling
+          onSave={handlePaymentAdded}
+          onCancel={onPaymentMethodClose}
+        />
+      </OnboardingModal>
 
       <Flex>
         <AlertIcon boxSize={4} mt={1} ml={1} />

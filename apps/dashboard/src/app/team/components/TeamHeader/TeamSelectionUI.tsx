@@ -31,9 +31,7 @@ export function TeamSelectionUI(props: {
         value={searchTeamTerm}
         onValueChange={setSearchTeamTerm}
       />
-
       <Separator />
-
       <ScrollShadow
         scrollableClassName="max-h-[400px] lg:max-h-[600px]"
         className="grow"
@@ -108,11 +106,10 @@ export function TeamSelectionUI(props: {
           </ul>
         </div>
       </ScrollShadow>
-
       {/* TODO - what do we do on this button click? */}
       {/* Bottom */}
       {teamPlan && teamPlan !== "pro" && (
-        <div className="p-2 border-t">
+        <div className="p-2 border-t border-border">
           <Button
             variant="primary"
             className="w-full"

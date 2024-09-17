@@ -60,6 +60,7 @@ import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 
 interface CustomContractFormProps {
   metadata: FetchDeployMetadataResult;
+  jwt: string;
   modules?: FetchDeployMetadataResult[];
 }
 
@@ -112,6 +113,7 @@ function checkTwPublisher(publisher: string | undefined) {
 export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   metadata,
   modules,
+  jwt,
 }) => {
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -454,9 +456,11 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           id="custom-contract-form"
           as="form"
           onSubmit={form.handleSubmit(async (formData) => {
-            if (!walletChain?.id || !activeAccount) {
+            if (!walletChain?.id || !activeAccount || !jwt) {
               return;
             }
+
+            window.TW_AUTH_TOKEN = jwt;
 
             // open the status modal
             let steps: DeployModalStep[] = [
@@ -672,21 +676,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   );
                 })}
 
-              {isModular && (
-                <>
-                  {modules?.length ? (
-                    <ModularContractDefaultModulesFieldset
-                      form={form}
-                      modules={modules}
-                      isTWPublisher={isTWPublisher}
-                    />
-                  ) : (
-                    <div className="min-h-[250px] flex justify-center items-center">
-                      <Spinner className="size-8" />
-                    </div>
-                  )}
-                </>
-              )}
+              {isModular &&
+                (modules?.length ? (
+                  <ModularContractDefaultModulesFieldset
+                    form={form}
+                    modules={modules}
+                    isTWPublisher={isTWPublisher}
+                  />
+                ) : (
+                  <div className="min-h-[250px] flex justify-center items-center">
+                    <Spinner className="size-8" />
+                  </div>
+                ))}
 
               {advancedParams.length > 0 && (
                 <Accordion allowToggle>
