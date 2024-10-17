@@ -1,29 +1,31 @@
-import { Image, StyleSheet, View, useColorScheme } from "react-native";
+import { Button, Image, StyleSheet, View, useColorScheme } from "react-native";
 
 import { ParallaxScrollView } from "@/components/ParallaxScrollView";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { chain, client } from "@/constants/thirdweb";
+import { useEffect, useState } from "react";
+import { NativeModules } from "react-native";
+import { createAuth } from "thirdweb/auth";
+import { baseSepolia, ethereum } from "thirdweb/chains";
 import {
+  ConnectButton,
+  ConnectEmbed,
+  lightTheme,
   useActiveAccount,
+  useActiveWallet,
   useConnect,
   useDisconnect,
-  useActiveWallet,
-  ConnectButton,
-  lightTheme,
-  ConnectEmbed,
 } from "thirdweb/react";
+import { shortenAddress } from "thirdweb/utils";
+import { createWallet } from "thirdweb/wallets";
 import {
   getUserEmail,
   hasStoredPasskey,
   inAppWallet,
 } from "thirdweb/wallets/in-app";
-import { chain, client } from "@/constants/thirdweb";
-import { shortenAddress } from "thirdweb/utils";
-import { ThemedButton } from "@/components/ThemedButton";
-import { useEffect, useState } from "react";
-import { createWallet } from "thirdweb/wallets";
-import { baseSepolia, ethereum } from "thirdweb/chains";
-import { createAuth } from "thirdweb/auth";
+const { GodotModule } = NativeModules;
 
 const wallets = [
   inAppWallet({
@@ -72,6 +74,11 @@ let isLoggedIn = false;
 export default function HomeScreen() {
   const account = useActiveAccount();
   const theme = useColorScheme();
+
+  function launchGodotGame() {
+    GodotModule.launchGodotGame();
+  }
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -93,6 +100,7 @@ export default function HomeScreen() {
           enabled.
         </ThemedText>
       </View>
+      <Button onPress={launchGodotGame} title="Start Game" />
       <ConnectButton
         client={client}
         theme={theme || "dark"}

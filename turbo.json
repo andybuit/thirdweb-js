@@ -89,7 +89,8 @@
     },
     "game-expo#android": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["ANDROID_HOME"]
     },
     "game-expo#web": {
       "cache": false,
